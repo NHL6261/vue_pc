@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="WraperContainer">
     <!-- 路由占位符 -->
     <router-view></router-view>
   </div>
@@ -7,10 +7,14 @@
 
 <script type="text/ecmascript-6">
   export default {
+   
   }
 </script>
 
-<style lang="stylus">
-
+<style lang="less">
+  #WraperContainer{
+    width: 100%;
+    height: 100%;
+  }
  
 </style>
