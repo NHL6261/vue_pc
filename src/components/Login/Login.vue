@@ -1,7 +1,6 @@
 <template>
   <div>
-    <!-- 路由占位符 -->
-    <router-view></router-view>
+      登录组件
   </div>
 </template>
 
@@ -10,7 +9,7 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 
  
 </style>
