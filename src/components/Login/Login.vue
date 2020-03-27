@@ -3,7 +3,7 @@
     <div class="Login_Text">
       <!-- 头像区域 -->
       <div class="Img_Header">
-        <img src="../../assets/Mrni.jpg" alt="" />
+        <img src="../../assets/logo.png" alt="">
       </div>
       <!-- 登录表单区域 -->
       <el-form
@@ -32,7 +32,8 @@
         </el-form-item>
         <!-- 按鈕 -->
         <el-form-item class="btns">
-          <el-button type="primary" @click.passive="goLogin">登录</el-button>
+          <!-- 事件绑定 事件代理 -->
+          <el-button type="primary" @keyup.13="onEnter" @click.passive="goLogin">登录</el-button>
           <el-button @click="resetLoginForm()" type="info">重置</el-button>
         </el-form-item>
       </el-form>
@@ -45,8 +46,8 @@ export default {
     data(){
         return{
             LoginForm:{
-                username:'admin', // 用户名
-                password:'admin', // 密码
+                username:'', // 用户名
+                password:'', // 密码
             },
             // 获取登录信息
             UserInfo:[], // 用户登录正确
@@ -66,7 +67,30 @@ export default {
             }
         }
     },
+    mounted(){
+      document.onkeydown = event => {
+      // 兼容浏览器
+      var e = event || window.event || arguments.callee.caller.arguments[0];
+      if(e && e.keyCode === 13){
+        // 将字符串转换成对象的形式
+        const local = JSON.parse(localStorage.getItem('userinfo'))
+        if(local.status === 200){
+          this.$message.success('登录成功!!')
+          window.sessionStorage.setItem("token",this.SavaToken)
+          this.$router.push('home')
+        }else{
+          this.$message.error('数据不合法')
+        }
+      }
+    }
+    },
     methods:{
+      // 键盘按下
+      onEnter(event){
+        if(event.keyCode === 13){
+          console.log(1111)
+        }
+      },
         resetLoginForm(){
             // 重置表单
             this.$refs.resetInputRef.resetFields()
@@ -77,14 +101,18 @@ export default {
             this.$refs.resetInputRef.validate( async valid => {
                 if(valid !== false){
                     const result = await this.$http.getUserInfo()
+                    // 将数据存到 localStorage里
+                    const session = JSON.stringify(result.data[0])   
+                    window.localStorage.setItem('userinfo',session)
+                    // 拿token到本地
                     this.SavaToken = result.data[0].token
+                    // 判断状态码
                     if(result.data[0].status === 200){
                         this.$message.success('恭喜您,登录成功!')
                         window.sessionStorage.setItem("token",this.SavaToken)
                         this.$router.push('home')
                     }else{
-                        alert('数据不合法')
-                        this.$message.success('恭喜您,登录成功!')
+                        this.$message.error('数据不合法!')
                     }
                 }else{
                     this.$message.error('请输入合法信息!')

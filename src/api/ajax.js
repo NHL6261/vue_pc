@@ -11,6 +11,8 @@ const instance = axios.create({
 instance.interceptors.request.use(config => {
     // 将请求到的json类型转换成stringify类型
     config.data = qs.stringify(config.data)
+    // 将token 放到请求头当中
+    config.headers.Authorization = window.sessionStorage.getItem('token')
     return config
 })
 
